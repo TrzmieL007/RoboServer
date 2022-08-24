@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Index</title>
+    <style>
+        #Response.success {
+            background-color: #D3FFCA;
+            color: #003400;
+        }
+        #Response.error {
+            background-color: #ffaaaa;
+            color: #770000;
+        }
+        #Response {
+            margin-top: 2rem;
+            padding: 1rem;
+        }
+        #Response:empty, #stderr:empty, #stdout:empty { display: none; }
+        #message {
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+        }
+        #stdout, #stderr {
+            border: 1px solid;
+            padding: 1rem;
+            margin: -.5rem;
+        }
+        #stdout {
+            border-color: #003400;
+            color: #003400;
+            background-color: #D3FFCA;
+        }
+        #stderr {
+            background-color: #ffaaaa;
+            border-color: #770000;
+            color: #770000;
+        }
+    </style>
+    <script type="application/javascript">
+        function onSend(){
+            const spawn = (document.getElementsByName('spawn')[0] || {value: ''}).value;
+            const arguments = (document.getElementsByName('arguments')[0] || {value: ''}).value.split(' ');
+            const url = `http://localhost:8184/cmd?spawn=${spawn}&arguments=${arguments.join('&arguments=')}`;
+            fetch(
+                url,
+                {method:'GET'}
+            ).then(response => response.json()
+            ).then(json => {
+                const div = document.querySelector('#Response');
+                if(div){
+                    div.className = json.success ? 'success' : 'error';
+                    const message = div.querySelector('#message');
+                    const stdout = div.querySelector('#stdout');
+                    const stderr = div.querySelector('#stderr');
+                    message.innerText = json.message;
+                    stdout.innerText = json.stdOut.replace(/\\n/g, '\n');
+                    stderr.innerText = json.stdErr.replace(/\\n/g, '\n');
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <div><label>Program name:</label> <input name="spawn" /></div>
+    <div><label>arguments:</label> <input name="arguments" /></div>
+    <button onClick="onSend()">Send</button>
+    <div id="Response">
+        <div id="message"></div>
+        <pre id="stdout"></pre>
+        <pre id="stderr"></pre>
+    </div>
+</body>
+</html>
