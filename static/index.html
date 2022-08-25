@@ -53,18 +53,25 @@
                     const message = div.querySelector('#message');
                     const stdout = div.querySelector('#stdout');
                     const stderr = div.querySelector('#stderr');
-                    message.innerText = json.message;
+                    message.innerHTML = json.message.replace(/\*([A-z\s.,]+)\*/g, "<b>$1</b>");
                     stdout.innerText = json.stdOut.replace(/\\n/g, '\n');
                     stderr.innerText = json.stdErr.replace(/\\n/g, '\n');
                 }
             });
         }
+        function send(e){
+            const key = e.keyCode || e.which;
+            if(key === 13) {
+                const button = document.getElementById('send');
+                button.click();
+            }
+        }
     </script>
 </head>
-<body>
+<body onload="document.body.addEventListener('keyup', send)">
     <div><label>Program name:</label> <input name="spawn" /></div>
     <div><label>arguments:</label> <input name="arguments" /></div>
-    <button onClick="onSend()">Send</button>
+    <button id="send" onClick="onSend()">Send</button>
     <div id="Response">
         <div id="message"></div>
         <pre id="stdout"></pre>

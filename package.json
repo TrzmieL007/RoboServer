@@ -2,11 +2,11 @@
   "name": "roboserver",
   "version": "1.0.0",
   "description": "Small server to be run on a rasbery on the robodog. This servers main responsibility will be running a code on the robot based on requests received.",
-  "main": "../index.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "debug": "../node_modules/.bin/nodemon index.js",
-    "start": "node ../index.js"
+    "dev": "nodemon index.js",
+    "start": "node index.js"
   },
   "keywords": [
     "robodog"

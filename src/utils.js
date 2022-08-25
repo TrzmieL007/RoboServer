@@ -3,7 +3,8 @@ const getKeys = obj => {
 };
 const getParamsFromUrl = (url) => {
     const paramsString = url.replace(/\/[^?]+\?(.*)/, "$1");
-    const paramsArray = paramsString.split('&');
+    if(paramsString === url) return {};
+    const paramsArray = paramsString.split('&').filter(param => !!param);
     return paramsArray.reduce((params, curr) => {
         const [key, ...values] = curr.split('=');
         const value = decodeURIComponent(values.join('='));
@@ -30,8 +31,15 @@ const getContentType = ext => {
     }
 }
 
+const isIn = (element, array) => {
+    if(Array.isArray(array)) return array.indexOf(element) > -1;
+
+    return false;
+}
+
 module.exports = {
     getKeys,
     getParamsFromUrl,
     getContentType,
+    isIn,
 }
